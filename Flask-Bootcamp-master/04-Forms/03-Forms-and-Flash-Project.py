@@ -29,7 +29,7 @@ def index():
         # Grab the data from the breed on the form.
 
         session['breed'] = form.breed.data
-        flash(f"You just changed your breed to: {session['breed']}")
+        flash("You just changed your breed to: {{session['breed']}}")
         return redirect(url_for("index"))
 
 
