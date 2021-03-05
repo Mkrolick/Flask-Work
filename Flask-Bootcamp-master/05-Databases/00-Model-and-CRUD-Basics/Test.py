@@ -5,6 +5,5 @@ dog = Puppy('aaa', 3)
 db.session.add(dog)
 db.session.commit()
 
-
-print(Puppy.query.get(5).name)
+Puppy.query.filter_by(name="aaa").delete
 print(Puppy.query.all())
