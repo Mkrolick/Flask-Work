@@ -15,8 +15,8 @@ from BasicModelApp import db, Puppy
 db.create_all()
 
 # Create new entries in the database
-sam = Puppy('Sammy',3)
-frank = Puppy('Frankie',4)
+sam = Puppy('Sammy', 3, 'a')
+frank = Puppy('Frankie', 4, 'a')
 
 # Check ids (haven't added sam and frank to database, so they should be None)
 print(sam.id)
