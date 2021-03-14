@@ -3,6 +3,9 @@ from forms import  AddForm , DelForm, AddOwner
 from flask import Flask, render_template, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask import request
+
+
 app = Flask(__name__)
 # Key for Forms
 app.config['SECRET_KEY'] = 'mysecretkey'
@@ -24,13 +27,12 @@ class Puppy(db.Model):
     __tablename__ = 'puppies'
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.Text)
-    owner = db.relationship('Owner',backref='puppy',uselist=False)
+    owner = db.relationship('owners',backref='puppy',uselist=False)
 
     def __init__(self,name):
         self.name = name
 
     def __repr__(self):
-
         if self.owner:
             return f"Puppy name: {self.name} Owner: {self.owner}"
         else:
@@ -38,18 +40,18 @@ class Puppy(db.Model):
 
 class Owner(db.Model):
 
-    __tablename__ = 'owner'
+    __tablename__ = 'owners'
     id = db.Column(db.Integer,primary_key = True)
     name = db.Column(db.Text)
-    pup_id = db.Column(db.ForeignKey('puppies.id'))
+    pup_id = db.Column(db.Integer, db.ForeignKey('puppies.id'))
 
-    def __init__(self, name, pup_id)
+    def __init__(self, name, pup_id):
         self.pup_id = pup_id
         self.name = name
 
 
     def __repr__(self):
-        return f"My name is {self.name}. My puppies Id is {self.pup_id}"
+        return f"Name: {self.name} Puppy Id: {self.pup_id}"
 
 
 ############################################
@@ -83,6 +85,7 @@ def list_pup():
     puppies = Puppy.query.all()
     return render_template('list.html', puppies=puppies)
 
+
 @app.route('/delete', methods=['GET', 'POST'])
 def del_pup():
 
@@ -96,7 +99,9 @@ def del_pup():
 
         return redirect(url_for('list_pup'))
     return render_template('delete.html',form=form)
+
 @app.route('/add_owner', methods=['GET', 'POST'])
+def add_owner():
     form = AddOwner()
 
     if form.validate_on_submit():
@@ -105,9 +110,18 @@ def del_pup():
         new_owner = Owner(name, id)
         db.session.add(new_owner)
         db.session.commit()
-        return render_template(url_for(list_pup()))
+        return render_template(url_for('list_owners'))
 
-    return render_template('add_owner',form=form)
+    return render_template('add_owner.html',form=form)
+
+@app.route('/list_owners')
+def list_owners():
+    Owners = Owner.query.all()
+    return render_template('list_owners.html', Owners = Owners)
+
+
+
+
 
 
 

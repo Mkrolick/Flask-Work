@@ -7,6 +7,9 @@
       {# This hidden_tag is a CSRF security feature. #}
       {{ form.hidden_tag() }}
       {{ form.id.label }} {{ form.id() }}
+      <b></b>
+      {{ form.name.label }} {{ form.name() }}
+      <b></b>
       {{ form.submit() }}
   </form>
 </div>
